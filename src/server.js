@@ -4,7 +4,10 @@ import cors from 'cors';
 import pino from 'pino-http';
 
 import { env } from './utils/env.js';
-import { getContacts, getContactById } from './services/contactServices.js';
+
+import contactsRouter from './routers/contacts.js';
+import notFoundHandler from './middlewares/notFoundHandler.js';
+import errorHandler from './middlewares/errorHandler.js';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -20,51 +23,10 @@ export const setupServer = () => {
     });
     app.use(logger);
 
-    app.get('/api/contacts', async (req, res) => {
-        try {
-            const data = await getContacts();
-            res.json({
-                status: 200,
-                data,
-                message: 'Successfully found contacts!',
-            });
-        } catch (error) {
-            res.status(500).json({
-                message: error.message,
-            });
-        }
-    });
+    app.use('/contacts', contactsRouter);
 
-    app.get('/api/contacts/:contactId', async (req, res) => {
-        const { contactId } = req.params;
-        try {
-            const data = await getContactById(contactId);
-            if (!data) {
-                return res.status(404).json({
-                    message: 'Not found!',
-                });
-            }
-            res.json({
-                status: 200,
-                data,
-                message: `Successfully found contact with id ${contactId}!`,
-            });
-        } catch (error) {
-            if (error.message.includes('Cast to ObjectId failed')) {
-                error.status = 404;
-            }
-            const { status = 500 } = error;
-            res.status(status).json({
-                message: error.message,
-            });
-        }
-    });
-
-    app.use((req, res, next) => {
-        res.status(404).json({
-            message: 'Not found',
-        });
-    });
+    app.use(notFoundHandler);
+    app.use(errorHandler);
 
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
