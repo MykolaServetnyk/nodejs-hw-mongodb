@@ -1,16 +1,6 @@
 import express from 'express';
 import { getAllContactsController, getContactController, addContactController, patchContactController, deleteContactController } from '../controllers/contacts.js';
-
-const ctrlWrapper = (controller) => {
-    return async (req, res, next) => {
-        try {
-            await controller(req, res, next);
-        } catch (error) {
-            next(error);
-        }
-    }
-}
-
+import ctrlWrapper from '../utils/ctrlWrapper.js';
 
 const contactsRouter = express.Router();
 

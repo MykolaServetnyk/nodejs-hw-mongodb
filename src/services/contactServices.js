@@ -3,21 +3,22 @@ import Contact from '../db/models/Contact.js'
 export const getContacts = () => Contact.find();
 export const getContactById = (contactId) => Contact.findById(contactId);
 export const addContact = (data) => Contact.create(data);
-export const upsertContact = async (filter, data, options = {}) => {
-    const result = await Contact.findOneAndUpdate(filter, data, {
-        new: true,
-        includeResultMetadata: true,
-        ...options,
-    });
+export const updateContact = async (contactId, payload, options = {}) => {
+    const rawResult = await Contact.findOneAndUpdate({ _id: contactId }, payload,
+        {
+            new: true,
+            includeResultMetadata: true,
+            ...options,
+        });
 
-    if (!result || !result.value) return null;
-
-    const isNew = Boolean(result?.lastErrorObject?.upserted);
+    if (!rawResult || !rawResult.value) return null;
 
     return {
-        data: result.value,
-        isNew,
+        contact: rawResult.value,
+        isNew: Boolean(rawResult?.lastErrorObject?.upserted),
     }
 };
-
-export const deleteContact = filter => Contact.findOneAndDelete(filter);
+export const deleteContact = contactId => {
+    const contact = Contact.findOneAndDelete({ _id: contactId })
+    return contact
+};
