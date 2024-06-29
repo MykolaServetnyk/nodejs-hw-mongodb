@@ -7,6 +7,9 @@ import { sortOrderList } from '../utils/parseSortParams.js';
 export const getContacts = async ({ filter, page, perPage, sortBy = contactFieldList[0], sortOrder = sortOrderList[0] }) => {
     const skip = (page - 1) * perPage;
     const dataBaseQuery = Contact.find();
+    if (filter.type) {
+        dataBaseQuery.where("type").equals(filter.type);
+    }
     if (filter.favorite) {
         dataBaseQuery.where("favorite").equals(filter.favorite);
     };
