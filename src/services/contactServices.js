@@ -6,17 +6,18 @@ import { contactFieldList } from "../constants/contact-constants.js";
 import { sortOrderList } from '../utils/parseSortParams.js';
 
 export const getContacts = async ({ filter, page, perPage, sortBy = contactFieldList[0], sortOrder = sortOrderList[0] }) => {
+    console.log(filter);
     const skip = (page - 1) * perPage;
     const dataBaseQuery = Contact.find();
-    if (filter.type) {
-        dataBaseQuery.where("type").equals(filter.type);
+    if (filter.contactType) {
+        dataBaseQuery.where("contactType").equals(filter.contactType);
     }
-    if (filter.favorite) {
-        dataBaseQuery.where("favorite").equals(filter.favorite);
+    if (filter.favourite) {
+        dataBaseQuery.where("isFavourite").equals(filter.isFavourite);
     };
 
     const data = await dataBaseQuery.skip(skip).limit(perPage).sort({ [sortBy]: sortOrder });
-    const totalItems = await Contact.find().merge(dataBaseQuery).countDocuments();
+    const totalItems = await Contact.countDocuments();
     const { totalPages, hasNextPage, hasPreviousPage } = calcPaginationData({ total: totalItems, perPage, page });
 
     return {
