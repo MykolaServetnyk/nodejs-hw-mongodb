@@ -9,6 +9,10 @@ export const getContacts = async ({ filter, page, perPage, sortBy = contactField
     console.log(filter);
     const skip = (page - 1) * perPage;
     const dataBaseQuery = Contact.find();
+    if (filter.userId) {
+        dataBaseQuery.where("userId").equals(filter.userId);
+    }
+
     if (filter.contactType) {
         dataBaseQuery.where("contactType").equals(filter.contactType);
     }
@@ -17,7 +21,7 @@ export const getContacts = async ({ filter, page, perPage, sortBy = contactField
     };
 
     const data = await dataBaseQuery.skip(skip).limit(perPage).sort({ [sortBy]: sortOrder });
-    const totalItems = await Contact.countDocuments();
+    const totalItems = await Contact.find().merge(dataBaseQuery).countDocuments();
     const { totalPages, hasNextPage, hasPreviousPage } = calcPaginationData({ total: totalItems, perPage, page });
 
     return {
@@ -36,7 +40,6 @@ export const addContact = (data) => Contact.create(data);
 export const updateContact = async (filter, data, options = {}) => {
     const rawResult = await Contact.findOneAndUpdate(filter, data,
         {
-
             includeResultMetadata: true,
             ...options,
         });
@@ -48,7 +51,4 @@ export const updateContact = async (filter, data, options = {}) => {
         isNew: Boolean(rawResult?.lastErrorObject?.upserted),
     }
 };
-export const deleteContact = contactId => {
-    const contact = Contact.findOneAndDelete({ _id: contactId })
-    return contact
-};
+export const deleteContact = filter => Contact.findOneAndDelete(filter);
