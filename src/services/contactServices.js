@@ -1,12 +1,42 @@
-import Contact from '../db/models/Contact.js'
+// src/services/contactServices.js
+import Contact from '../db/models/Contact.js';
 
-export const getContacts = () => Contact.find();
+import calcPaginationData from '../utils/calcPaginationData.js';
+import { contactFieldList } from "../constants/contact-constants.js";
+import { sortOrderList } from '../utils/parseSortParams.js';
+
+export const getContacts = async ({ filter, page, perPage, sortBy = contactFieldList[0], sortOrder = sortOrderList[0] }) => {
+    console.log(filter);
+    const skip = (page - 1) * perPage;
+    const dataBaseQuery = Contact.find();
+    if (filter.contactType) {
+        dataBaseQuery.where("contactType").equals(filter.contactType);
+    }
+    if (filter.favourite) {
+        dataBaseQuery.where("isFavourite").equals(filter.isFavourite);
+    };
+
+    const data = await dataBaseQuery.skip(skip).limit(perPage).sort({ [sortBy]: sortOrder });
+    const totalItems = await Contact.countDocuments();
+    const { totalPages, hasNextPage, hasPreviousPage } = calcPaginationData({ total: totalItems, perPage, page });
+
+    return {
+        data,
+        page,
+        perPage,
+        totalItems,
+        totalPages,
+        hasPreviousPage,
+        hasNextPage,
+    }
+
+};
 export const getContactById = (contactId) => Contact.findById(contactId);
 export const addContact = (data) => Contact.create(data);
-export const updateContact = async (contactId, payload, options = {}) => {
-    const rawResult = await Contact.findOneAndUpdate({ _id: contactId }, payload,
+export const updateContact = async (filter, data, options = {}) => {
+    const rawResult = await Contact.findOneAndUpdate(filter, data,
         {
-            new: true,
+
             includeResultMetadata: true,
             ...options,
         });
