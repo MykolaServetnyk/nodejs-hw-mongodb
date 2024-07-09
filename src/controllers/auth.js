@@ -21,7 +21,6 @@ export const registerController = async (req, res) => {
     const { email } = req.body;
     const user = await findUser({ email });
     if (user) {
-        // throw createHttpError(401, "Email or password invalid");
         throw createHttpError(409, "Email already in use");
     }
 
@@ -44,13 +43,11 @@ export const logInController = async (req, res) => {
     const user = await findUser({ email });
     if (!user) {
         throw createHttpError(404, "Email not found");
-        // throw createHttpError(401, "Email or password invalid");
     }
 
     const passwordCompare = await compareHash(password, user.password);
     if (!passwordCompare) {
         throw createHttpError(401, "Password invalid");
-        // throw createHttpError(401, "Email or password invalid");
     }
 
     const session = await createSession(user._id);
