@@ -3,7 +3,6 @@ const calcPaginationData = ({ total, page, perPage }) => {
     if (perPage < 1) perPage = 1;
 
     const totalPages = Math.ceil(total / perPage);
-    console.log(total);
     const hasNextPage = page < totalPages;
     const hasPreviousPage = page > 1;
 

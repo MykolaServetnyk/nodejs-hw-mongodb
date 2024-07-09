@@ -6,7 +6,6 @@ import { contactFieldList } from "../constants/contact-constants.js";
 import { sortOrderList } from '../utils/parseSortParams.js';
 
 export const getContacts = async ({ filter, page, perPage, sortBy = contactFieldList[0], sortOrder = sortOrderList[0] }) => {
-    console.log(filter);
     const skip = (page - 1) * perPage;
     const dataBaseQuery = Contact.find();
     if (filter.userId) {
