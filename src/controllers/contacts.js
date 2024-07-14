@@ -8,6 +8,7 @@ import { contactFieldList } from '../constants/contact-constants.js';
 import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import env from '../utils/env.js';
+import 'dotenv/config';
 
 export const getAllContactsController = async (req, res) => {
     const { _id: userId } = req.user;
@@ -103,4 +104,4 @@ export const deleteContactController = async (req, res, next) => {
     }
     res.status(204).send();
 
-}
+};
