@@ -5,9 +5,9 @@ import validateBody from "../utils/validateBody.js";
 
 import { userSignupSchema, userLogInSchema } from "../validation/users.js";
 
-import { requestResetEmailSchema } from '../validation/auth.js';
+import { requestResetEmailSchema, resetPasswordSchema } from '../validation/auth.js';
 
-import { registerController, logInController, refreshController, logoutController, requestResetEmailController } from "../controllers/auth.js";
+import { registerController, logInController, refreshController, logoutController, requestResetEmailController, resetPasswordController } from "../controllers/auth.js";
 
 const authRouter = Router();
 
@@ -21,7 +21,7 @@ authRouter.post("/logout", ctrlWrapper(logoutController));
 
 authRouter.post('/send-reset-email', validateBody(requestResetEmailSchema), ctrlWrapper(requestResetEmailController));
 
-authRouter.post('/reset-password');
+authRouter.post('/reset-password', validateBody(resetPasswordSchema), ctrlWrapper(resetPasswordController));
 
 
 export default authRouter;
