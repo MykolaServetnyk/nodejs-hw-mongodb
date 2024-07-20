@@ -10,14 +10,7 @@ post:
     content:
       application/json:
         schema:
-          type: object
-          properties:
-            email:
-              type: string
-              example: 'user@example.com'
-            password:
-              type: string
-              example: 'password123'
+          $ref: ..\..\components\schemas\loginRequest.yaml
   responses:
     '200':
       description: User authenticated successfully
@@ -26,11 +19,16 @@ post:
           schema:
             type: object
             properties:
+              message:
+                type: string
+                example: Successfully logged in an user!
               token:
                 type: string
                 example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
     '401':
-      description: Invalid email or password
+      $ref: ..\..\components\responses\401.yaml
+    '404':
+      description: Email not found
       content:
         application/json:
           schema:
@@ -38,4 +36,4 @@ post:
             properties:
               message:
                 type: string
-                example: 'Invalid email or password'
+                example: 'Email not found'

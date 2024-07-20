@@ -522,17 +522,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "new.user@example.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "newpassword123"
-                  }
-                }
+                "$ref": "#/components/schemas/userSchema"
               }
             }
           }
@@ -569,6 +559,22 @@
                 }
               }
             }
+          },
+          "409": {
+            "description": "Email already in use",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Email already in use"
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -590,17 +596,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string",
-                    "example": "user@example.com"
-                  },
-                  "password": {
-                    "type": "string",
-                    "example": "password123"
-                  }
-                }
+                "$ref": "#/components/schemas/loginRequest"
               }
             }
           }
@@ -613,6 +609,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully logged in an user!"
+                    },
                     "token": {
                       "type": "string",
                       "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -623,7 +623,10 @@
             }
           },
           "401": {
-            "description": "Invalid email or password",
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "Email not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -631,7 +634,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Invalid email or password"
+                      "example": "Email not found"
                     }
                   }
                 }
@@ -677,6 +680,10 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Successfully refreshed a session!"
+                    },
                     "token": {
                       "type": "string",
                       "example": "new-refreshed-token..."
@@ -687,20 +694,7 @@
             }
           },
           "401": {
-            "description": "Invalid token",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Invalid token"
-                    }
-                  }
-                }
-              }
-            }
+            "$ref": "#/components/responses/401"
           }
         }
       }
@@ -737,21 +731,8 @@
           "204": {
             "description": "User logged out successfully"
           },
-          "400": {
-            "description": "Invalid token",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Invalid token"
-                    }
-                  }
-                }
-              }
-            }
+          "401": {
+            "$ref": "#/components/responses/401"
           }
         }
       }
@@ -864,8 +845,11 @@
               }
             }
           },
-          "400": {
-            "description": "Invalid token or password",
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "description": "User not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -873,7 +857,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Invalid token or password"
+                      "example": "User not found"
                     }
                   }
                 }
@@ -939,6 +923,36 @@
             "description": "Contact's photo",
             "type": "string",
             "example": "https://res.cloudinary.com/uqwgdu/image/upload/image.png"
+          }
+        }
+      },
+      "userSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Tom Johnes"
+          },
+          "email": {
+            "type": "string",
+            "example": "new.user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "newpassword123"
+          }
+        }
+      },
+      "loginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "new.user@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "newpassword123"
           }
         }
       }

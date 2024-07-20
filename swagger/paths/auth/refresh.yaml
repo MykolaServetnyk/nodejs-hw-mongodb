@@ -23,16 +23,11 @@ post:
           schema:
             type: object
             properties:
+              message:
+                type: string
+                example: Successfully refreshed a session!
               token:
                 type: string
                 example: 'new-refreshed-token...'
     '401':
-      description: Invalid token
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                example: 'Invalid token'
+      $ref: ..\..\components\responses\401.yaml

@@ -29,8 +29,10 @@ post:
               message:
                 type: string
                 example: 'Password has been successfully changed'
-    '400':
-      description: Invalid token or password
+    '401':
+      $ref: ..\..\components\responses\401.yaml
+    '404':
+      description: User not found
       content:
         application/json:
           schema:
@@ -38,4 +40,4 @@ post:
             properties:
               message:
                 type: string
-                example: 'Invalid token or password'
+                example: 'User not found'

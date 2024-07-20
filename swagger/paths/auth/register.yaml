@@ -8,14 +8,7 @@ post:
     content:
       application/json:
         schema:
-          type: object
-          properties:
-            email:
-              type: string
-              example: 'new.user@example.com'
-            password:
-              type: string
-              example: 'newpassword123'
+          $ref: ..\..\components\schemas\userSchema.yaml
   responses:
     '201':
       description: User registered successfully
@@ -37,3 +30,13 @@ post:
               message:
                 type: string
                 example: 'Invalid input data'
+    '409':
+      description: Email already in use
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 'Email already in use'
